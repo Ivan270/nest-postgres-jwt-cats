@@ -10,7 +10,6 @@ import { ConfigModule } from "@nestjs/config";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    CatsModule,
     TypeOrmModule.forRoot({
       type: "postgres",
       host: process.env.POSTGRES_HOST,
@@ -19,8 +18,13 @@ import { ConfigModule } from "@nestjs/config";
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       synchronize: true,
-      autoLoadEntities: true
+      autoLoadEntities: true,
+      ssl: process.env.POSTGRES_SSL === "true",
+      extra: {
+        ssl: process.env.POSTGRES_SSL === "true" ? { rejectUnauthorized: false } : null
+      }
     }),
+    CatsModule,
     BreedsModule,
     UsersModule,
     AuthModule
