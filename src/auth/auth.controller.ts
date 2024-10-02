@@ -1,20 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
-import { Request } from "express";
 import { Auth } from "./decorators/auth.decorator";
 import { Role } from "../common/enums/role.enum";
 import { ActiveUser } from "../common/decorators/active-user.decorator";
 import { ActiveUserInterface } from "../common/iterfaces/active-user.interface";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-interface RequestWithUser extends Request {
-  user: {
-    email: string;
-    role: string;
-  };
-}
-
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -38,6 +32,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  @ApiBearerAuth()
   @Get("profile")
 
   // Decorador personalizado para Roles
